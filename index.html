@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bảo Tàng Ảo 3D</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    
+    <!-- Import Maps for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- The 3D Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay (Always visible) -->
+    <div class="ui-layer">
+        <!-- Top Left: Progress -->
+        <div class="progress-box glass-panel">
+            <p>Đây là không gian triển lãm <strong id="current-room-name">Sảnh Chính 3D</strong>.</p>
+            <p>Hãy tìm đủ 8 báu vật để khám phá nhé!</p>
+            <div class="counter"><span id="found-count">0</span>/8 ✦</div>
+        </div>
+
+        <!-- Top Right: Actions -->
+        <div class="action-box">
+             <button id="start-tour-btn" class="action-btn primary">▶ Bắt đầu Tour</button>
+             <button class="action-btn glass-panel">☼ Ngày</button>
+             <div class="action-btn glass-panel" style="display:flex; flex-direction:column; gap:8px; padding: 10px 15px;">
+                 <div style="display:flex; justify-content:space-between; align-items:center; width:160px;">
+                     <span style="font-size:0.85rem; font-weight:600;">🎵 Nhạc nền</span>
+                     <input type="range" id="bgm-slider" min="0" max="1" step="0.05" value="0.2" style="width:70px; cursor:pointer;" />
+                 </div>
+                 <div style="display:flex; justify-content:space-between; align-items:center; width:160px;">
+                     <span style="font-size:0.85rem; font-weight:600;">📺 Video TV</span>
+                     <input type="range" id="video-slider" min="0" max="1" step="0.05" value="0.4" style="width:70px; cursor:pointer;" />
+                 </div>
+             </div>
+        </div>
+    </div>
+    
+    <!-- Media Sources (Hidden) -->
+    <video id="video-source" src="./images/source.mp4" playsinline loop style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;"></video>
+    <audio id="bgm-source" src="./images/bgm.mp3" loop style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;"></audio>
+
+    <!-- Crosshair for aiming in 3D -->
+    <div id="crosshair">+</div>
+
+    <!-- Start / Pause Blocker Overlay -->
+    <div id="blocker">
+        <div id="instructions">
+            <p style="font-size:36px; font-weight: bold;">CLICK ĐỂ BẮT ĐẦU</p>
+            <p>Di chuyển: W, A, S, D<br/>
+            Nhìn xung quanh: CHUỘT<br/>
+            Tương tác hiện vật: CLICK CHUỘT VÀO HIỆN VẬT<br/>
+            Thoát: ESC</p>
+        </div>
+    </div>
+
+    <!-- Mobile Controls (Hidden on PC) -->
+    <div id="mobile-controls">
+        <div id="joystick-base">
+            <div id="joystick-stick"></div>
+        </div>
+        <div id="touch-look-zone"></div>
+    </div>
+
+    <!-- Information Panel (Right Slide-in) -->
+    <div id="info-panel" class="info-panel glass-panel closed">
+        <button id="close-panel" class="close-btn">&times;</button>
+        <div class="panel-year" id="panel-year">NĂM 1945</div>
+        <h2 id="panel-title" class="panel-title">Tượng Đài Chủ Tịch Hồ Chí Minh</h2>
+        <div class="divider"></div>
+        <p id="panel-desc" class="panel-desc">Bức tượng tái hiện lại khoảnh khắc lịch sử thiêng liêng khi Chủ tịch Hồ Chí Minh đọc Tuyên ngôn Độc lập tại Quảng trường Ba Đình vào ngày 2 tháng 9 năm 1945...</p>
+    </div>
+
+    <!-- Use type="module" for Three.js script -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
