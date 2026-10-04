@@ -71,7 +71,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--museum-gold
 #blocker::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .13; background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size: 80px 80px; mask-image: linear-gradient(90deg, #000, transparent 75%); }
 #instructions { position: relative; width: min(760px, 100%); margin-right: min(28vw, 360px); transform: translateY(82px); }
 .landing-kicker, .modal-kicker, .panel-kicker { color: var(--museum-gold); font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
-#instructions h1 { max-width: 700px; margin: 18px 0 20px; font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 600; letter-spacing: -.045em; line-height: .95; }
+#instructions h1 { max-width: 700px; margin: 18px 0 20px; font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 600; letter-spacing: -.045em; line-height: 1.12; }
 .landing-intro { max-width: 590px; color: rgba(255,255,255,.68); font-size: clamp(.95rem, 1.4vw, 1.08rem); line-height: 1.75; }
 .landing-cta { display: inline-flex; align-items: center; gap: 28px; margin-top: 30px; padding: 14px 18px 14px 22px; border: 1px solid rgba(242,220,156,.45); border-radius: 2px; background: var(--museum-red); cursor: pointer; font-size: .8rem; font-weight: 700; letter-spacing: .04em; transition: background .2s, gap .25s; }
 .landing-cta:hover { background: var(--museum-red-bright); gap: 36px; }
