@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bảo Tàng Ảo 3D</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#170c0d" />
+    <title>Bảo tàng Hồ Chí Minh — Hành trình lịch sử 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
-    
-    <!-- Import Maps for Three.js -->
     <script type="importmap">
         {
             "imports": {
@@ -18,71 +19,122 @@
     </script>
 </head>
 <body>
-    <!-- The 3D Canvas Container -->
-    <div id="canvas-container"></div>
+    <main id="canvas-container" aria-label="Không gian tham quan bảo tàng 3D"></main>
 
-    <!-- UI Overlay (Always visible) -->
-    <div class="ui-layer">
-        <!-- Top Left: Progress -->
-        <div class="progress-box glass-panel">
-            <p>Đây là không gian triển lãm <strong id="current-room-name">Sảnh Chính 3D</strong>.</p>
-            <p>Hãy tìm đủ 8 báu vật để khám phá nhé!</p>
-            <div class="counter"><span id="found-count">0</span>/8 ✦</div>
-        </div>
+    <header class="ui-layer" aria-label="Thông tin hành trình">
+        <section class="progress-box glass-panel" aria-label="Tiến độ khám phá">
+            <p class="museum-name">Bảo tàng Hồ Chí Minh</p>
+            <div class="location-row">
+                <span class="section-label">Khu vực hiện tại</span>
+                <strong id="current-room-name">Khuôn viên bảo tàng</strong>
+            </div>
+            <div class="progress-meta">
+                <span>Hành trình khám phá</span>
+                <span><b id="found-count">0</b>/<span id="counter-total">8</span> hiện vật</span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-label="Tiến độ tìm hiện vật" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0">
+                <span id="progress-fill"></span>
+            </div>
+            <span id="total-count" class="sr-only">8</span>
+        </section>
 
-        <!-- Top Right: Actions -->
-        <div class="action-box">
-             <button id="start-tour-btn" class="action-btn primary">▶ Bắt đầu Tour</button>
-             <button class="action-btn glass-panel">☼ Ngày</button>
-             <div class="action-btn glass-panel" style="display:flex; flex-direction:column; gap:8px; padding: 10px 15px;">
-                 <div style="display:flex; justify-content:space-between; align-items:center; width:160px;">
-                     <span style="font-size:0.85rem; font-weight:600;">🎵 Nhạc nền</span>
-                     <input type="range" id="bgm-slider" min="0" max="1" step="0.05" value="0.2" style="width:70px; cursor:pointer;" />
-                 </div>
-                 <div style="display:flex; justify-content:space-between; align-items:center; width:160px;">
-                     <span style="font-size:0.85rem; font-weight:600;">📺 Video TV</span>
-                     <input type="range" id="video-slider" min="0" max="1" step="0.05" value="0.4" style="width:70px; cursor:pointer;" />
-                 </div>
-             </div>
-        </div>
+        <nav class="action-box glass-panel" aria-label="Công cụ tham quan">
+            <button id="start-tour-btn" class="action-btn primary" type="button">
+                <span class="button-symbol" aria-hidden="true">▶</span>
+                <span>Bắt đầu</span>
+            </button>
+            <button id="theme-toggle-btn" class="action-btn theme-toggle" type="button" aria-pressed="false" title="Chuyển Ngày/Đêm · Phím N">
+                <span class="button-symbol" aria-hidden="true">☀</span>
+                <span>Ngày</span>
+            </button>
+            <div class="media-control">
+                <button id="media-toggle-btn" class="action-btn icon-btn" type="button" aria-expanded="false" aria-controls="media-popover" aria-label="Điều chỉnh âm thanh">
+                    <svg id="volume-icon" class="volume-icon" data-level="2" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                        <path class="volume-speaker" d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+                        <path class="volume-wave wave-1" d="M14.5 9.5a3.5 3.5 0 0 1 0 5" />
+                        <path class="volume-wave wave-2" d="M16.8 7.2a6.7 6.7 0 0 1 0 9.6" />
+                        <path class="volume-wave wave-3" d="M19.1 4.9a10 10 0 0 1 0 14.2" />
+                        <path class="volume-mute" d="M15.5 9.5l5 5m0-5l-5 5" />
+                    </svg>
+                </button>
+                <div id="media-popover" class="media-popover" hidden>
+                    <label for="bgm-slider"><span>Âm lượng</span><input type="range" id="bgm-slider" min="0" max="1" step="0.05" value="0.5" /><output id="volume-value" for="bgm-slider">50%</output></label>
+                </div>
+            </div>
+            <button id="help-btn" class="action-btn icon-btn" type="button" aria-label="Xem hướng dẫn"><span aria-hidden="true">?</span></button>
+            <button id="fullscreen-btn" class="action-btn icon-btn" type="button" aria-label="Toàn màn hình"><span aria-hidden="true">⛶</span></button>
+        </nav>
+    </header>
+
+    <audio id="bgm-source" class="media-source" src="./images/bgm.mp3" loop></audio>
+
+    <div id="crosshair" aria-hidden="true">
+        <span class="crosshair-mark"></span>
+        <span id="interaction-hint">Nhấn để khám phá</span>
     </div>
-    
-    <!-- Media Sources (Hidden) -->
-    <video id="video-source" src="./images/source.mp4" playsinline loop style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;"></video>
-    <audio id="bgm-source" src="./images/bgm.mp3" loop style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;"></audio>
+    <button id="room6-continue-btn" class="room6-continue-btn hidden" type="button">Tiếp tục tham quan</button>
+    <button id="room6-audio-fallback" class="room6-audio-fallback hidden" type="button">Bật âm thanh phim</button>
 
-    <!-- Crosshair for aiming in 3D -->
-    <div id="crosshair">+</div>
-
-    <!-- Start / Pause Blocker Overlay -->
-    <div id="blocker">
+    <section id="blocker" aria-label="Bắt đầu hành trình">
         <div id="instructions">
-            <p style="font-size:36px; font-weight: bold;">CLICK ĐỂ BẮT ĐẦU</p>
-            <p>Di chuyển: W, A, S, D<br/>
-            Nhìn xung quanh: CHUỘT<br/>
-            Tương tác hiện vật: CLICK CHUỘT VÀO HIỆN VẬT<br/>
-            Thoát: ESC</p>
+            <p class="landing-kicker">Bảo tàng số · Không gian 3D</p>
+            <h1>Hành trình theo dấu<br />lịch sử Việt Nam</h1>
+            <p class="landing-intro">Bước vào Bảo tàng Hồ Chí Minh, khám phá các dấu mốc và hiện vật được kể lại trong một hành trình tương tác.</p>
+            <button class="landing-cta" type="button"><span>Bắt đầu tham quan</span><span aria-hidden="true">→</span></button>
+            <div class="control-guide" aria-label="Hướng dẫn điều khiển">
+                <span><kbd>W A S D</kbd> Di chuyển</span>
+                <span><kbd>Chuột</kbd> Quan sát</span>
+                <span><kbd>Click</kbd> Khám phá</span>
+                <span><kbd>ESC</kbd> Tạm dừng</span>
+                <span><kbd>N</kbd> Ngày / Đêm</span>
+            </div>
+            <p class="control-guide-note">Nhấn N để chuyển sang ban đêm và xem pháo hoa.</p>
         </div>
-    </div>
+    </section>
 
-    <!-- Mobile Controls (Hidden on PC) -->
-    <div id="mobile-controls">
-        <div id="joystick-base">
-            <div id="joystick-stick"></div>
-        </div>
+    <div id="mobile-controls" aria-hidden="true">
+        <div id="joystick-base"><div id="joystick-stick"></div></div>
         <div id="touch-look-zone"></div>
     </div>
 
-    <!-- Information Panel (Right Slide-in) -->
-    <div id="info-panel" class="info-panel glass-panel closed">
-        <button id="close-panel" class="close-btn">&times;</button>
-        <div class="panel-year" id="panel-year">NĂM 1945</div>
-        <h2 id="panel-title" class="panel-title">Tượng Đài Chủ Tịch Hồ Chí Minh</h2>
+    <aside id="info-panel" class="info-panel glass-panel closed" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+        <button id="close-panel" class="close-btn" type="button" aria-label="Đóng thông tin">×</button>
+        <p class="panel-kicker">Hiện vật lịch sử</p>
+        <div class="panel-meta">
+            <span class="panel-year" id="panel-year">Năm 1945</span>
+            <span id="discovered-badge" class="discovered-badge" hidden>Mới khám phá</span>
+        </div>
+        <h2 id="panel-title" class="panel-title">Hiện vật lịch sử</h2>
         <div class="divider"></div>
-        <p id="panel-desc" class="panel-desc">Bức tượng tái hiện lại khoảnh khắc lịch sử thiêng liêng khi Chủ tịch Hồ Chí Minh đọc Tuyên ngôn Độc lập tại Quảng trường Ba Đình vào ngày 2 tháng 9 năm 1945...</p>
-    </div>
+        <p id="panel-desc" class="panel-desc">Thông tin hiện vật sẽ hiển thị tại đây.</p>
+    </aside>
 
-    <!-- Use type="module" for Three.js script -->
+    <section id="victory-popup" class="modal-layer victory-popup hidden" role="dialog" aria-modal="true" aria-labelledby="victory-title">
+        <div class="modal-card victory-card">
+            <div class="completion-seal" aria-hidden="true"><span>✓</span></div>
+            <p class="modal-kicker">Hoàn thành hành trình</p>
+            <h2 id="victory-title">Bạn đã hoàn tất chuyến tham quan</h2>
+            <p>Bạn đã khám phá <strong id="victory-found-count">8</strong>/<strong id="victory-total-count">8</strong> hiện vật của bảo tàng. Cảm ơn bạn đã dành thời gian lắng nghe những câu chuyện lịch sử.</p>
+            <div class="modal-actions">
+                <button id="continue-tour-btn" class="modal-btn secondary" type="button">Tiếp tục tham quan</button>
+                <button id="restart-tour-btn" class="modal-btn primary" type="button">Khám phá lại</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="entrance-popup" class="modal-layer entrance-popup hidden" role="dialog" aria-modal="true" aria-labelledby="entrance-title">
+        <div class="modal-card entrance-card">
+            <div class="architectural-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <p class="modal-kicker">Điểm bắt đầu hành trình</p>
+            <h2 id="entrance-title">Bảo tàng Hồ Chí Minh</h2>
+            <p>Bạn muốn bước vào khám phá không gian trưng bày hay quay lại khuôn viên bên ngoài?</p>
+            <div class="modal-actions">
+                <button id="leave-museum-btn" class="modal-btn secondary" type="button">Quay lại khuôn viên</button>
+                <button id="enter-museum-btn" class="modal-btn primary" type="button">Bước vào bảo tàng</button>
+            </div>
+        </div>
+    </section>
+
     <script type="module" src="script.js"></script>
 </body>
 </html>
